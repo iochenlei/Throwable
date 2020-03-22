@@ -1,0 +1,2 @@
+Premain-Class: cn.throwable.AgentDemo1
+Agent-Class: cn.throwable.AgentDemo1
