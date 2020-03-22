@@ -199,7 +199,9 @@ public class Injector
 
 + 先运行HelloWorld程序。
 
-  ```java -jar target/HelloWorld.jar```
+  ```java
+  -jar target/HelloWorld.jar
+  ```
 
 + 然后使用`jps`命令查看HelloWorld程序的PID。
 
