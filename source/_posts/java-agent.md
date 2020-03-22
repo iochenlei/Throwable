@@ -11,7 +11,7 @@ categories:
 
 Agent是一种从Java 6开始引入的机制。Agent以Jar包的形式存在，JVM在运行主程序的`main`方法之前会先调用Jar包中的所指定的`premain`方法，在`premain`方法中可以实现AOP、性能分析、日志输出等操作。
 
-## Agent起什么作用？
+## Agent有什么用？
 
 Java Agent主要的功能可以集中在“运行时”三个字上面，例如，通过运行时AOP可以使某些功能以“外挂”的方式提供：
 
