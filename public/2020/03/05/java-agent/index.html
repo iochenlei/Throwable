@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="java-agent," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="什么是Java Agent？Agent是一种从Java 6开始引入的机制。Agent以Jar包的形式存在，JVM在运行主程序的main方法之前会先调用Jar包中的所指定的premain方法，在premain方法中可以实现AOP、性能分析、日志输出等操作。 Agent起什么作用？Java Agent主要的功能可以集中在“运行时”三个字上面，例如，通过运行时AOP可以使某些功能以“外挂”的方式提供：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java Agent快速入门">
+<meta property="og:url" content="http://yoursite.com/2020/03/05/java-agent/index.html">
+<meta property="og:site_name" content="Lei&#39;s Blog">
+<meta property="og:description" content="什么是Java Agent？Agent是一种从Java 6开始引入的机制。Agent以Jar包的形式存在，JVM在运行主程序的main方法之前会先调用Jar包中的所指定的premain方法，在premain方法中可以实现AOP、性能分析、日志输出等操作。 Agent起什么作用？Java Agent主要的功能可以集中在“运行时”三个字上面，例如，通过运行时AOP可以使某些功能以“外挂”的方式提供：">
+<meta property="article:published_time" content="2020-03-05T06:41:56.000Z">
+<meta property="article:modified_time" content="2020-03-22T03:01:08.570Z">
+<meta property="article:author" content="陈磊">
+<meta property="article:tag" content="java-agent">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/03/05/java-agent/"/>
+
+
+
+
+
+  <title>Java Agent快速入门 | Lei's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Lei's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/05/java-agent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陈磊">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lei's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java Agent快速入门</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-05T14:41:56+08:00">
+                2020-03-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="什么是Java-Agent？"><a href="#什么是Java-Agent？" class="headerlink" title="什么是Java Agent？"></a>什么是Java Agent？</h2><p>Agent是一种从Java 6开始引入的机制。Agent以Jar包的形式存在，JVM在运行主程序的<code>main</code>方法之前会先调用Jar包中的所指定的<code>premain</code>方法，在<code>premain</code>方法中可以实现AOP、性能分析、日志输出等操作。</p>
+<h2 id="Agent起什么作用？"><a href="#Agent起什么作用？" class="headerlink" title="Agent起什么作用？"></a>Agent起什么作用？</h2><p>Java Agent主要的功能可以集中在“运行时”三个字上面，例如，通过运行时AOP可以使某些功能以“外挂”的方式提供：</p>
+<ul>
+<li>APM工具，借助于Java Agent提供的运行时AOP功能，SkyWalking和Zipkin这类性能监控平台会针对一些常用的框架（例如：JDBC、Spring Cloud和Dubbo）提供了一个Agent（一个jar包），用于实现非侵入式的性能指标收集以及在服务间调用时自动传递traceId传递。</li>
+<li>运行时AOP增强，阿里开源的<a href="https://github.com/alibaba/transmittable-thread-local" target="_blank" rel="noopener">transmittable-thread-local</a>可以在运行时对<a href="https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html" target="_blank" rel="noopener"><code>InheritableThreadLocal</code></a>进行增强，使任务提交时ThreadLocal的值可以传递到任务执行时，这样可以解决ThreadLocal的值不能准确传递到线程池中的问题。</li>
+<li>热加载，<a href="https://zeroturnaround.com/software/jrebel/" target="_blank" rel="noopener">Jrebel</a>可以实现类的热加载，甚至该工具还可以实现资源文件的热加载，例如，Mybatis的xml文件。</li>
+<li>运行时Debug，<a href="https://github.com/btraceio/btrace" target="_blank" rel="noopener">BTrace</a>和阿里开源的<a href="https://github.com/alibaba/arthas" target="_blank" rel="noopener">arthas</a>可以对运行中的Java程序进行在线调试，这样用于追踪一些线下难以复现的问题。</li>
+</ul>
+<h2 id="如何实现一个Agent？"><a href="#如何实现一个Agent？" class="headerlink" title="如何实现一个Agent？"></a>如何实现一个Agent？</h2><p>上文中提到Agent以Jar包的形式存在，JVM在运行主程序的<code>main</code>方法之前会先调用Jar包中指定的<code>premain</code>方法。因此一个Agent需要一个<code>premain</code>方法。</p>
+<p>JVM支持两种形式<code>premain</code>方法的定义，JVM首先尝试调用下面的<code>premain</code>方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">premain</span><span class="params">(String agentArgs, Instrumentation inst)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果JVM没有找到上述方法，它就会调用下面这个<code>premain</code>方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">premain</span><span class="params">(String agentArgs)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>下面我们来实现一个简单的Agent，它会在<code>premain</code>方法执行时输出：<code>I&#39;m AgentDemo1</code>。</p>
+<p>先创建一个类存放<code>premain</code>方法：</p>
+<p><strong>AgentDemo1.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.throwable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AgentDemo1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">premain</span><span class="params">(String agentArgs)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"I'm AgentDemo1"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来需要在MANIFEST.MF文件中使用<code>Premain-Class</code>属性指定<code>premain</code>方法的所在类：</p>
+<p><strong>MANIFEST.MF</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Premain-Class: cn.throwable.AgentDemo1</span><br></pre></td></tr></table></figure>
+
+<p>最后把上面的程序打包为AgetnDemo1.jar</p>
+<h2 id="Agent如何加载？"><a href="#Agent如何加载？" class="headerlink" title="Agent如何加载？"></a>Agent如何加载？</h2><p>Agent的加载方式有两种，第一种方式是在主程序启动之前加载，第二种方式是在主程序启动之后加载。</p>
+<p>为了方便后面的演示，我们先来准备一个Hello World程序，它被打包成为<code>HelloWorld.jar</code>。</p>
+<p><strong>HelloWorld.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.throwable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        System.out.println( <span class="string">"Hello World!"</span> );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="在主程序启动之前加载"><a href="#在主程序启动之前加载" class="headerlink" title="在主程序启动之前加载"></a>在主程序启动之前加载</h3><p>在主程序启动之前加载一个Agent非常简单，在启动主程序时指定参数<code>-javaagent</code>即可：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -javaagent:target/AgentDemo1-<span class="number">1.0</span>-SNAPSHOT.jar -jar HelloWorld.jar</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>target/AgentDemo1-1.0-SNAPSHOT.jar</code>是Agent的所在路径。</p>
+<p><strong>输出</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">I&#39;m AgentDemo1</span><br><span class="line">Hello World!</span><br></pre></td></tr></table></figure>
+
+<p>但是，如果我们看见的是下面的输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">I&#39;m AgentDemo1</span><br><span class="line">no main manifest attribute, in HelloWorld.jar</span><br></pre></td></tr></table></figure>
+
+<p>说明我们在HelloWolrd.jar中没有指定<code>main</code>方法的位置，此时可以使用下面的命令同时指定<code>Agent</code>的位置与main方法的位置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -javaagent:target&#x2F;AgentDemo1-1.0-SNAPSHOT.jar -cp HelloWorld.jar cn.throwable.App</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>PS：一般来说应该在HelloWorld.jar的MANIFEST.MF文件中使用属性Main-Class指定main方法的所在类。</p>
+</blockquote>
+<h3 id="在主程序启动之后加载"><a href="#在主程序启动之后加载" class="headerlink" title="在主程序启动之后加载"></a>在主程序启动之后加载</h3><p>在主程序启动之后加载也称动态加载，这种加载方式可以把Agent挂载到正在运行的Java程序上，下面来看一下这种加载方式。</p>
+<p>我们需要稍微改造一下HelloWorld程序，不然它在输出<code>Hello, World!</code>之后便直接结束了导致我们没机会挂载Agent：</p>
+<p><strong>HelloWorld.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.throwable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        System.out.println( <span class="string">"Hello World!"</span> );</span><br><span class="line">        Thread.sleep(<span class="number">1000</span> * <span class="number">60</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在该程序在输出<code>Hello, World!</code>之后会等待1分钟。</p>
+<p>还有，与第一种加载方式不同的是，使用动态加载时JVM会调用Agent的<code>agentmain</code>而不是<code>premain</code>方法，因此我们也需要修改一下我们的Agent：</p>
+<p><strong>AgentDemo1.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.throwable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AgentDemo1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">premain</span><span class="params">(String agentArgs)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"I'm AgentDemo1"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">agentmain</span><span class="params">(String agentArgs)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"I'm AgentDemo1(Agentmain)"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如你所见，在上面的代码中同时存在<code>premain</code>和<code>agentmain</code>方法，这是允许的，因为在MANIFEST.MF文件中使用了两个不同的属性来指示两者的所在位置，其中<code>Premain-Class</code>属性表示<code>premain</code>方法的所在类，<code>Agent-Class</code>属性表示<code>agentmain</code>方法的所在类：</p>
+<p><strong>MANIFEST.MF</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Premain-Class: cn.throwable.AgentDemo1</span><br><span class="line">Agent-Class: cn.throwable.AgentDemo1</span><br></pre></td></tr></table></figure>
+
+<p>此外，Agent的动态加载还需要编写一个程序来把Agent挂载到正在运行的Java程序之上：</p>
+<p><strong>Injector.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.throwable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.sun.tools.attach.AgentInitializationException;</span><br><span class="line"><span class="keyword">import</span> com.sun.tools.attach.AgentLoadException;</span><br><span class="line"><span class="keyword">import</span> com.sun.tools.attach.AttachNotSupportedException;</span><br><span class="line"><span class="keyword">import</span> com.sun.tools.attach.VirtualMachine;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Injector</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args )</span> <span class="keyword">throws</span> IOException, AttachNotSupportedException, AgentLoadException, AgentInitializationException </span>&#123;</span><br><span class="line">        <span class="comment">// 目标程序的PID, 可通过jps命令查看</span></span><br><span class="line">        String jvmId = <span class="string">"4315"</span>;</span><br><span class="line">        VirtualMachine vm = VirtualMachine.attach(jvmId);</span><br><span class="line">        <span class="comment">// Agent所在的位置</span></span><br><span class="line">        File agentFile = <span class="keyword">new</span> File(<span class="string">"AgentDemo1.jar"</span>);</span><br><span class="line">        <span class="comment">// 载入Agent</span></span><br><span class="line">        vm.loadAgent(agentFile.getAbsolutePath());</span><br><span class="line">        vm.detach();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码中，变量<code>jvmId</code>存放的是目标程序的PID，该值可以使用<code>jps</code>命令查看。</p>
+<p>现在万事俱备，最后一步就是使用Injector把Agent挂载到运行中的HelloWorld程序上：</p>
+<ul>
+<li><p>先运行HelloWorld程序。</p>
+<figure class="highlight java"><figcaption><span>-jar target/HelloWorld.jar```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">+ 然后使用`jps`命令查看HelloWorld程序的PID。</span><br><span class="line"></span><br><span class="line">  ```text</span><br><span class="line">  <span class="number">18374</span> RemoteMavenServer36</span><br><span class="line">  <span class="number">19946</span> Launcher</span><br><span class="line">  <span class="number">19979</span> HelloWorld-<span class="number">1.0</span>-SNAPSHOT.jar</span><br><span class="line">  <span class="number">20221</span> Jps</span><br><span class="line">  <span class="number">18126</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>由上可见HelloWorld程序的PID是19979，把这个值放入变量<code>jvmId</code>之中并运行Injector。</p>
+</li>
+</ul>
+<p><strong>输出</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Hello World!</span><br><span class="line">I&#39;m AgentDemo1(Agentmain)</span><br></pre></td></tr></table></figure>
+
+<p>最后需要注意的是，Java的<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html" target="_blank" rel="noopener">官方文档</a>上特别指出：</p>
+<blockquote>
+<p>Agent的Jar包是由<code>SystemClassLoader</code>进行加载的，而主程序的<code>main</code>方法所在类也是由<code>SystemClassLoader</code>加载的，这意味着Agent的<code>premain</code>方法与主程序的<code>main</code>方法使用相同的classloader加载规则与安全性设置。</p>
+</blockquote>
+<h2 id="Java-Agent的异常处理策略"><a href="#Java-Agent的异常处理策略" class="headerlink" title="Java Agent的异常处理策略"></a>Java Agent的异常处理策略</h2><h4 id="主程序启动之前加载的异常处理策略"><a href="#主程序启动之前加载的异常处理策略" class="headerlink" title="主程序启动之前加载的异常处理策略"></a>主程序启动之前加载的异常处理策略</h4><p>对于在主程序启动之前加载的Agent来说，如果在<code>premain</code>方法中产生异常则会导致主程序启动失败，下面我们演示一下该场景。</p>
+<p>首先，我们修改一下Agent的实现，在<code>premain</code>方法中抛出一个运行时异常：</p>
+<p><strong>AgentDemo1.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.throwable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AgentDemo1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">premain</span><span class="params">(String agentArgs)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"I'm AgentDemo1"</span>);</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"abc"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后加载该Agent：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -javaagent:target&#x2F;AgentDemo1-1.0-SNAPSHOT.jar -jar HelloWorld.jar</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">I&#39;m AgentDemo1</span><br><span class="line">Exception in thread &quot;main&quot; java.lang.reflect.InvocationTargetException</span><br><span class="line">        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</span><br><span class="line">        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)</span><br><span class="line">        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</span><br><span class="line">        at java.lang.reflect.Method.invoke(Method.java:498)</span><br><span class="line">        at sun.instrument.InstrumentationImpl.loadClassAndStartAgent(InstrumentationImpl.java:388)</span><br><span class="line">        at sun.instrument.InstrumentationImpl.loadClassAndCallPremain(InstrumentationImpl.java:401)</span><br><span class="line">Caused by: java.lang.RuntimeException: abc</span><br><span class="line">        at cn.throwable.AgentDemo1.premain(AgentDemo1.java:7)</span><br><span class="line">        ... 6 more</span><br><span class="line">FATAL ERROR in native method: processing of -javaagent failed</span><br><span class="line">[1]    19266 abort      java -javaagent:target&#x2F;AgentDemo1-1.0-SNAPSHOT.jar -jar HelloWorld.jar</span><br></pre></td></tr></table></figure>
+
+<h4 id="主程序启动之后加载的异常处理策略"><a href="#主程序启动之后加载的异常处理策略" class="headerlink" title="主程序启动之后加载的异常处理策略"></a>主程序启动之后加载的异常处理策略</h4><p>对于动态加载的Agent来说，在<code>agentmain</code>方法中产生的异常是不会对正在运行的Java程序有任何影响的，下面我们来演示一下这种场景。</p>
+<p>与上面一样，我们先修改一下Agent的实现，在<code>agentmain</code>方法中抛出一个运行时异常：</p>
+<p><strong>AgentDemo1.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.throwable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AgentDemo1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">agentmain</span><span class="params">(String agentArgs)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"I'm AgentDemo1(Agentmain)"</span>);</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"abc"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后依次运行HelloWorld.jar与Injector程序，此时，虽然会抛出Agent启动失败的异常但是主程序的运行却不会受到影响。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Hello World!</span><br><span class="line">I&#39;m AgentDemo1(Agentmain)</span><br><span class="line">Exception in thread &quot;Attach Listener&quot; java.lang.reflect.InvocationTargetException</span><br><span class="line">        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</span><br><span class="line">        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)</span><br><span class="line">        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</span><br><span class="line">        at java.lang.reflect.Method.invoke(Method.java:498)</span><br><span class="line">        at sun.instrument.InstrumentationImpl.loadClassAndStartAgent(InstrumentationImpl.java:388)</span><br><span class="line">        at sun.instrument.InstrumentationImpl.loadClassAndCallAgentmain(InstrumentationImpl.java:411)</span><br><span class="line">Caused by: java.lang.RuntimeException: abc</span><br><span class="line">        at cn.throwable.AgentDemo1.agentmain(AgentDemo1.java:12)</span><br><span class="line">        ... 6 more</span><br><span class="line">Agent failed to start!</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java-agent/" rel="tag"># java-agent</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">陈磊</p>
+              <p class="site-description motion-element" itemprop="description">好好学习 天天向上</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Java-Agent？"><span class="nav-number">1.</span> <span class="nav-text">什么是Java Agent？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Agent起什么作用？"><span class="nav-number">2.</span> <span class="nav-text">Agent起什么作用？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何实现一个Agent？"><span class="nav-number">3.</span> <span class="nav-text">如何实现一个Agent？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Agent如何加载？"><span class="nav-number">4.</span> <span class="nav-text">Agent如何加载？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在主程序启动之前加载"><span class="nav-number">4.1.</span> <span class="nav-text">在主程序启动之前加载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在主程序启动之后加载"><span class="nav-number">4.2.</span> <span class="nav-text">在主程序启动之后加载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-Agent的异常处理策略"><span class="nav-number">5.</span> <span class="nav-text">Java Agent的异常处理策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#主程序启动之前加载的异常处理策略"><span class="nav-number">5.0.1.</span> <span class="nav-text">主程序启动之前加载的异常处理策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#主程序启动之后加载的异常处理策略"><span class="nav-number">5.0.2.</span> <span class="nav-text">主程序启动之后加载的异常处理策略</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">陈磊</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1278659482&web_id=1278659482" language="JavaScript"></script>
+  </div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
