@@ -15,7 +15,7 @@ Agent是一种从Java 6开始引入的机制。Agent以Jar包的形式存在，J
 
 Java Agent主要的功能可以集中在“运行时”三个字上面，例如，通过运行时AOP可以使某些功能以“外挂”的方式提供：
 
-+ APM工具，借助于Java Agent提供的运行时AOP功能，SkyWalking和Zipkin这类性能监控平台会针对一些常用的框架（例如：JDBC、Spring Cloud和Dubbo）提供了一个Agent（一个jar包），用于实现非侵入式的性能指标收集以及在服务间调用时自动传递traceId传递。
++ APM工具，借助于Java Agent提供的运行时AOP功能，SkyWalking和Zipkin这类性能监控平台会针对一些常用的框架（例如：JDBC、Spring Cloud和Dubbo）提供一个Agent（一个jar包）用于实现非侵入式的性能指标收集以及在服务间调用时自动传递traceId传递。
 + 运行时AOP增强，阿里开源的[transmittable-thread-local](https://github.com/alibaba/transmittable-thread-local)可以在运行时对[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)进行增强，使任务提交时ThreadLocal的值可以传递到任务执行时，这样可以解决ThreadLocal的值不能准确传递到线程池中的问题。
 + 热加载，[Jrebel](https://zeroturnaround.com/software/jrebel/)可以实现类的热加载，甚至该工具还可以实现资源文件的热加载，例如，Mybatis的xml文件。
 + 运行时Debug，[BTrace](https://github.com/btraceio/btrace)和阿里开源的[arthas](https://github.com/alibaba/arthas)可以对运行中的Java程序进行在线调试，这样用于追踪一些线下难以复现的问题。
