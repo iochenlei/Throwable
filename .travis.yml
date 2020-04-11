@@ -11,7 +11,7 @@ before_deploy:
 - sudo apt-get update && apt-get install sshpass  # install sshpass
 deploy:
   provider: script
-  skip-cleanup: true
+  cleanup: false
   script: sshpass -e scp -r public ubuntu@18.163.206.60:~/throwable.cn
   on:
     branch: master
