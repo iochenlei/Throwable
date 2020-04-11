@@ -8,11 +8,11 @@ branches:
     - master # build master branch only
 script:
   - hexo generate # generate static files
+before_deploy:
+- sudo apt-get install sshpass  # install sshpass
 deploy:
-  provider: pages
+  provider: script
   skip-cleanup: true
-  github-token: $GH_TOKEN
-  keep-history: true
+  script: sshpass -e scp -r public ubuntu@18.163.206.60:~/throwable.cn
   on:
     branch: master
-  local-dir: public
