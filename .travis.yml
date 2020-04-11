@@ -2,13 +2,15 @@ language: node_js
 node_js:
   - 10 # use nodejs v10 LTS
 cache: npm
+addons:
+  apt:
+    packages:
+    - sshpass
 branches:
   only:
     - master # build master branch only
 script:
   - hexo generate # generate static files
-before_deploy:
-- sudo apt-get update && apt-get install sshpass  # install sshpass
 deploy:
   provider: script
   cleanup: false
