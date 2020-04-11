@@ -14,6 +14,6 @@ script:
 deploy:
   provider: script
   cleanup: false
-  script: sshpass -e scp -r public ubuntu@18.163.206.60:~/throwable.cn
+  script: sshpass -e rsync -r --delete-after --quiet public ubuntu@18.163.206.60:~/throwable.cn
   on:
     branch: master
