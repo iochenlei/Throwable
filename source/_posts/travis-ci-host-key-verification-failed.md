@@ -7,6 +7,8 @@ categories: 常见问题
 
 最近，在Travis CI中使用sshpass + rsync来部署的时候，发现下面这条命令会报：Host key verification failed.
 
+<!--more-->
+
 ```text
 sshpass -e rsync -r --delete-after --quiet public myuser@18.163.206.00:~/throwable.cn
 ```
