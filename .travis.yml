@@ -14,6 +14,6 @@ script:
 deploy:
   provider: script
   skip_cleanup: true
-  script: sshpass -e rsync -r --delete-after --quiet public ubuntu@18.163.206.60:~/throwable.cn
+  script: ssh-keygen -R 18.163.206.60 && sshpass -e rsync -r --delete-after --quiet public ubuntu@18.163.206.60:~/throwable.cn
   on:
     branch: master
