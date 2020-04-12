@@ -2,7 +2,7 @@
 title: Git常用命令
 date: 2020-04-12 10:39:56
 tags: git
-Category: Git
+categories: Git
 ---
 
 ## 删除远程仓库中的分支
