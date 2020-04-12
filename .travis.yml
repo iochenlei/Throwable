@@ -13,7 +13,7 @@ script:
   - hexo generate # generate static files
 deploy:
   provider: script
-  cleanup: false
+  skip_cleanup: true
   script: sshpass -e rsync -r --delete-after --quiet public ubuntu@18.163.206.60:~/throwable.cn
   on:
     branch: master
