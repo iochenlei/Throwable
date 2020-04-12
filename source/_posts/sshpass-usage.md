@@ -40,7 +40,7 @@ $ echo $SSHPASS
 $ sshpass -e ssh username@10.42.0.1
 ```
 
-此外，sshpass不就可以用于执行ssh命令，也可用于执行scp或者rsync命令：
+此外，sshpass不仅可以用于执行ssh命令，也可用于执行scp或者rsync命令：
 
 ```shell
 # rsync
