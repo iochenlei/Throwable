@@ -2,6 +2,7 @@
 title: Travis CI中报Host key verification failed的解决方法
 date: 2020-04-12 09:52:55
 tags: travis-ci
+categories: 常见问题
 ---
 
 最近，在Travis CI中使用sshpass + rsync来部署的时候，发现下面这条命令会报：Host key verification failed.
