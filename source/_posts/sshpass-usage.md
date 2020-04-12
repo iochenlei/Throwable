@@ -9,6 +9,8 @@ sshpass用于在非交互式环境中提供ssh的密码，例如在CI环境中�
 
 该命令的语法如下：
 
+<!--more-->
+
 ```text
 Usage: sshpass [-f|-d|-p|-e] [-hV] command parameters
    -f filename   Take password to use from file
