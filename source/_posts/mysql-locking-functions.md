@@ -30,6 +30,8 @@ categories:
 
 当GET_LOCK()成功获取锁时，MySQL会在performance_schema数据库的`metadata_locks`表中注册一条与该锁对应的记录。`OBJECT_TYPE`列的值为`USER LEVEL LOCK`而`OBJECT_NAME`则是锁的名称。如果一个Session中多次获取了同样名称的锁，也只会有一条记录保存在`metadata_locks`表中。当该锁被释放时，`metadata_locks`中对应的记录也被删除。
 
+<!--more-->
+
 **IS_FREE_LOCK(str)**
 
 检测锁是否为空闲状态，返回1表示锁空闲，返回0表示锁已被占用，返回NULL表示发生错误。
