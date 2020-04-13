@@ -4,7 +4,7 @@ date: 2020-04-13 10:39:05
 tags:
 - 锁
 categories:
--MySQL
+- MySQL
 ---
 
 | 名称                | 描述             |
