@@ -1,5 +1,5 @@
 ---
-title: 【译】Jackson序列化枚举类型
+title: 【译】如何使用Jackson序列化与反序列化枚举类型
 date: 2020-04-14 21:26:42
 tags:
 - jackson
