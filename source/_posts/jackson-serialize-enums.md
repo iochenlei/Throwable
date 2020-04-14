@@ -195,7 +195,7 @@ Jackson将查找`getMeters()`方法返回值为0.0254的枚举对象。在本例
 assertEquals(Distance.INCH, city.getDistance());
 ```
 
-## 3.3. 使用@JsonProperty
+### 3.3. 使用@JsonProperty
 
 `@JsonProperty`注解可以用于一个枚举类型实例上：
 
