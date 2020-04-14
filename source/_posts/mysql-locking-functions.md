@@ -12,7 +12,7 @@ categories:
 | GET_LOCK()          | 获取指定名称的锁 |
 | IS_FREE_LOCK()      | 检测锁是否空闲   |
 | IS_USED_LOCK()      | 检测是否被占用   |
-| RELEASE_ALL_LOCKS() | 是否所有锁       |
+| RELEASE_ALL_LOCKS() | 释放全部锁       |
 | RELEASE_LOCK()      | 释放指定名称的锁 |
 
 **GET_LOCK(str, timeout)**

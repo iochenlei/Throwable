@@ -58,6 +58,7 @@ new ObjectMapper().writeValueAsString(Distance.MILE);
 {"unit":"miles","meters":1609.34}
 ```
 
+<!--more-->
 ### 2.2. 枚举类型转为JSON对象
 
 从Jackson 2.2.1开始，我们可以使用	`@JsonFormat`配置转换的结果：
