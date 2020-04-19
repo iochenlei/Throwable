@@ -9,6 +9,8 @@ categories:
 
 最近，需要实现这样一个需求，我在单页面应用中使用axios发送Long Polling请求对某业务的状态进行更新，请求的等待超时时间为30s，如果等待期间页面路由发生改变(即组件销毁)，此时则应该取消等待中的请求。一番搜索之后，我在axios的README中找到了下面这个解决办法：
 
+<!--more-->
+
 axios中基于[可取消的Promise提案](https://github.com/tc39/proposal-cancelable-promises)实现了cancel token接口，于是我们可以像下面这样使用`CancelToken.source()`来创建一个cancel token：
 
 ```javascript
