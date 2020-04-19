@@ -7,6 +7,8 @@ categories:
 - MySQL
 ---
 
+## 函数说明
+
 | 名称                | 描述             |
 | ------------------- | ---------------- |
 | GET_LOCK()          | 获取指定名称的锁 |
@@ -18,7 +20,7 @@ categories:
 **GET_LOCK(str, timeout)**
 
 + str，锁的名称，在MySQL 5.7或更高的版本中，它的长度是64个字符
-+ timeout，超时时间, 如果timeout是负数表示无限等待
++ timeout，超时时间，单位秒，如果timeout是负数表示无限等待
 
 该函数获取到的锁是排它锁，同样名称的锁在同一时刻只能被一个Session所持有，如果其它的Session试图获取占用中的锁则会被阻塞。
 
@@ -49,4 +51,40 @@ categories:
 释放名称为str的锁，返回1表示锁释放成功，返回0表示锁的持有者不是当前Session，返回NULL表示名称为str的锁不存在。
 
 **注意：上面这些函数无法通过binlog复制到从机上。**
+
+## 使用方法
+
+### 获取锁
+
+```mysql
+select GET_LOCK("lock1", -1); -- 如果锁不可用，则无限等待下去
+select GET_LOCK("lock2", 20); -- 如果锁不可用，那么等待20秒之后返回0
+```
+
+### 释放锁
+
+```mysql
+select RELEASE_LOCK("lock1");
+do RELEASE_LOCK("lock2");
+```
+
+> select与do语句的区别在于：select有返回值且可以使用from分支语句，而do没有返回值且不能使用from分支语句。
+
+此外，在MySQL 5.7之前调用`GET_LOCK()`会释放已经存在的锁，考虑下面的例子：
+
+```mysql
+SELECT GET_LOCK('lock1',10); -- 获取lock1
+SELECT GET_LOCK('lock2',10); -- 在MySQL5.7之前此时释放掉已经持有的锁lock1
+SELECT RELEASE_LOCK('lock2'); -- lock2释放成功，返回0
+SELECT RELEASE_LOCK('lock1'); -- lock2在调用GET_LOCK('lock2',10)已经释放了，所有现在释放失败，返回NULL
+```
+
+如果在MySQL 5.7或者更高的版本中，则不存在上面的问题：
+
+```mysql
+SELECT GET_LOCK('lock1',10); -- 获取lock1
+SELECT GET_LOCK('lock2',10); -- 获取lock2
+SELECT RELEASE_LOCK('lock2'); -- lock2释放成功，返回0
+SELECT RELEASE_LOCK('lock1'); -- lock1释放成功，返回0
+```
 
