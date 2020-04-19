@@ -3,6 +3,7 @@ title: 如何在axios中取消请求
 date: 2020-04-19 10:48:13
 tags:
 - axios
+categories:
 - 前端摸鱼
 ---
 
