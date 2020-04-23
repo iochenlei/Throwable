@@ -1,5 +1,5 @@
 ---
-title: 在React应用开发中使用绝对路径导入组件
+title: React应用开发使用绝对路径导入组件
 date: 2020-04-23 16:38:41
 tags:
 - React
