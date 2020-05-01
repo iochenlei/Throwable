@@ -1,5 +1,5 @@
 ---
-title: React应用开发使用绝对路径导入组件
+title: React应用开发使用绝对路径引用
 date: 2020-04-23 16:38:41
 tags:
 - React
@@ -7,7 +7,7 @@ categories:
 - 前端
 ---
 
-默认情况下，在对由React脚手架创建的应用进行开发时，我们会使用相对路径来引入组件(假设该组件位于`src/components/SubmittingToolbar`目录)：
+默认情况下，由React脚手架创建的应用，使用相对路径来引入组件(假设该组件位于`src/components/SubmittingToolbar`目录)：
 
 ```text
 import SubmittingToolbar from '../../../../components/SubmittingToolbar';
@@ -21,7 +21,7 @@ import SubmittingToolbar from '../../../../components/SubmittingToolbar';
 import SubmittingToolbar from 'components/SubmittingToolbar';
 ```
 
-那么我们如何配置才能达到该目的？其实很简单，只需要在根目录创建一个`jsconfig.json`文件：
+那么我们如何配置才能实现该目的？其实很简单，只需要在根目录创建一个`jsconfig.json`文件：
 
 ```json
 {
