@@ -9,7 +9,7 @@ categories:
 
 ## 什么是Java Agent？
 
-Agent是一种从Java 6开始引入的机制。Agent以Jar包的形式存在，JVM在执行主程序的`main`方法之前会先调用Agent中的`premain`方法，在`premain`方法中可以实现AOP、性能分析、日志输出等操作。
+Agent是一种从Java 6开始引入的机制。Agent以Jar包的形式存在，JVM在执行主程序的`main`方法之前会先调用Agent中的`premain`方法，这样一样，我们在`premain`方法中就可以为所欲为。
 
 <!--more-->
 
