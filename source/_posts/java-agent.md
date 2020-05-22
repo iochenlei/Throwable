@@ -9,13 +9,13 @@ categories:
 
 ## 什么是Java Agent？
 
-Agent是一种从Java 6开始引入的机制。Agent以Jar包的形式存在，JVM在执行主程序的`main`方法之前会先调用Agent中的`premain`方法，这样一样，我们在`premain`方法中就可以为所欲为。
+Agent是一种从Java 6开始引入的机制。Agent以Jar包的形式存在，JVM在执行主程序的`main`方法之前会先调用Agent中的`premain`方法，这样一来，我们就可以在主程序启动之前就有机会做一下其它的事情。
 
 <!--more-->
 
 ## Agent有什么用？
 
-Java Agent主要的功能可以集中在“运行时”三个字上面，例如，通过运行时AOP可以使某些功能以“外挂”的方式提供：
+Java Agent主要的功能体现在“运行时”三个字上面，例如，通过运行时AOP可以使某些功能以“外挂”的方式提供：
 
 + APM工具，借助于Java Agent提供的运行时AOP功能，SkyWalking和Zipkin这类性能监控平台会针对一些常用的框架（例如：JDBC、Spring Cloud和Dubbo）提供一个Agent（一个jar包）用于实现非侵入式的性能指标收集以及在服务间调用时自动传递traceId传递。
 + 运行时AOP增强，阿里开源的[transmittable-thread-local](https://github.com/alibaba/transmittable-thread-local)可以在运行时对[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)进行增强，使任务提交时ThreadLocal的值可以传递到任务执行时，这样可以解决ThreadLocal的值不能准确传递到线程池中的问题。
@@ -24,9 +24,9 @@ Java Agent主要的功能可以集中在“运行时”三个字上面，例如�
 
 ## 如何实现一个Agent？
 
-上文中提到Agent以Jar包的形式存在，JVM在运行主程序的`main`方法之前会先调用Jar包中指定的`premain`方法。因此一个Agent需要一个`premain`方法。
+上文中提到Agent以Jar包的形式存在，JVM在运行主程序的`main`方法之前会先调用Agent的`premain`方法。因此一个Agent需要有一个`premain`方法。
 
-JVM支持两种形式`premain`方法的定义，JVM首先尝试调用下面的`premain`方法：
+目前，JVM支持两种形式`premain`方法的定义，JVM首先尝试调用下面的`premain`方法：
 
 ```java
 public static void premain(String agentArgs, Instrumentation inst);
@@ -101,14 +101,14 @@ I'm AgentDemo1
 Hello World!
 ```
 
-但是，如果我们看见的是下面的输出：
+如果你看见的是下面的输出：
 
 ```text
 I'm AgentDemo1
 no main manifest attribute, in HelloWorld.jar
 ```
 
-说明我们在HelloWolrd.jar中没有指定`main`方法的位置，此时可以使用下面的命令同时指定`Agent`的位置与main方法的位置：
+说明我们在HelloWolrd.jar中没有指定`main`方法的位置，此时可以使用下面的命令指定`Agent`的位置与main方法的位置：
 
 ```text
 java -javaagent:target/AgentDemo1-1.0-SNAPSHOT.jar -cp HelloWorld.jar cn.throwable.App
