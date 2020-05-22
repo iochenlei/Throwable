@@ -165,7 +165,7 @@ Premain-Class: cn.throwable.AgentDemo1
 Agent-Class: cn.throwable.AgentDemo1
 ```
 
-此外，Agent的动态加载还需要编写一个程序来把Agent挂载到正在运行的Java程序之上：
+此外，为了实现Agent的动态加载还需要编写一个程序来把Agent挂载到正在运行的Java程序之上：
 
 **Injector.java**
 
@@ -197,7 +197,7 @@ public class Injector
 
 上面的代码中，变量`jvmId`存放的是目标程序的PID，该值可以使用`jps`命令查看。
 
-现在万事俱备，最后一步就是使用Injector把Agent挂载到运行中的HelloWorld程序上：
+最后一步就是使用Injector把Agent挂载到运行中的HelloWorld程序上：
 
 + 先运行HelloWorld程序。
 
