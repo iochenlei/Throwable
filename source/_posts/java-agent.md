@@ -9,7 +9,7 @@ categories:
 
 ## 什么是Java Agent？
 
-Agent是一种从Java 6开始引入的机制。Agent以Jar包的形式存在，JVM在执行主程序的`main`方法之前会先调用Agent中的`premain`方法，这样一来，我们就就有机会在主程序启动之前做其它的事情。
+Agent是一种从Java 6开始引入的机制。Agent以Jar包的形式存在，JVM在执行主程序的`main`方法之前会先调用Agent中的`premain`方法，这样一来，我们就有机会在主程序启动之前做其它的事情。
 
 <!--more-->
 
@@ -20,7 +20,7 @@ Java Agent主要的功能体现在“运行时”三个字上面，通过“运�
 + APM工具，例如SkyWalking和Zipkin这类性能监控平台会针对一些常用的框架（例如：JDBC、Spring Cloud和Dubbo）提供一个Agent（即一个jar包）用于实现非侵入式的性能指标收集，以及在服务间调用时自动传递traceId。
 + 运行时增强，阿里开源的[transmittable-thread-local](https://github.com/alibaba/transmittable-thread-local)可以在运行时对[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)进行增强，使任务提交时ThreadLocal的值可以传递到任务执行时，用于解决ThreadLocal的值不能准确传递到线程池中的问题。
 + 热加载，[Jrebel](https://zeroturnaround.com/software/jrebel/)可以实现类的热加载，甚至该工具还可以实现资源文件的热加载，例如，Mybatis的xml文件。
-+ 运行时Debug，[BTrace](https://github.com/btraceio/btrace)和阿里开源的[arthas](https://github.com/alibaba/arthas)可以对运行中的Java程序进行在线调试，这样用于追踪一些线下难以复现的问题。
++ 运行时Debug，[BTrace](https://github.com/btraceio/btrace)和阿里开源的[arthas](https://github.com/alibaba/arthas)可以对运行中的Java程序进行在线调试，用于追踪一些线下难以复现的问题。
 
 ## 如何实现一个Agent？
 
@@ -66,7 +66,7 @@ Premain-Class: cn.throwable.AgentDemo1
 
 ## Agent如何加载？
 
-Agent的加载方式有两种，第一种方式是在主程序启动之前加载，第二种方式是在主程序启动之后加载。
+Agent的加载方式有两种，一种方式是在主程序启动之前加载，另外一种方式是在主程序启动之后加载。
 
 为了方便后面的演示，我们先来准备一个Hello World程序，它被打包成为`HelloWorld.jar`。
 
