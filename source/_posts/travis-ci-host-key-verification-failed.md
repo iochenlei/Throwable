@@ -5,7 +5,7 @@ tags: travis-ci
 categories: 常见问题
 ---
 
-最近，在Travis CI中使用sshpass + rsync来部署的时候，发现下面这条命令会报：Host key verification failed.
+最近，在Travis CI中使用sshpass 与 rsync来部署静态网站的时候，发现下面这条命令会报错`Host key verification failed.`
 
 <!--more-->
 
@@ -13,11 +13,11 @@ categories: 常见问题
 sshpass -e rsync -r --delete-after --quiet public myuser@18.163.206.00:~/throwable.cn
 ```
 
-是什么原因导致了该问题？其实很简单，如果我们使用SSH客户端连接服务器，为了防止中间人攻击，在第一次连接上服务器时，会有个公钥确让阶段让你选yes或no。
+报错的原因是因为在使用`ssh`命令连接服务器时，为了防止中间人攻击，在第一次连接上服务器时，会有个公钥确认阶段让你选yes或no。
 
-输入yes表示接受，并且把服务器对应的公钥保存到`~/.ssh/known_hosts`文件中，如果之后使用SSH连接时发现服务器的公钥与`~/.ssh/known_hosts`中保存的不一致则会连接失败。
+输入yes表示接受，并且把服务器对应的公钥保存到`~/.ssh/known_hosts`文件中，如果在后续使用`ssh`命令连接服务器时，发现服务器的公钥与`~/.ssh/known_hosts`中保存的不一致则会连接失败。
 
-输入no表示不接受，如下所示，如果我们选择no或者直接键入回车都会得到：**Host key verification failed.**
+输入no表示不接受，如下所示，如果我们选择no或者直接键入回车都会得到：`Host key verification failed.`
 
 ```text
 The authenticity of host 'myec2 (18.163.206.00)' can't be established.

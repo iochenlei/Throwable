@@ -5,7 +5,7 @@ tags: sshpass
 categories: Linux命令
 ---
 
-sshpass用于在非交互式环境中提供ssh的密码，例如在CI环境中。
+sshpass是一个命令行工具，用于在非交互式环境中（例如CI中）提供ssh的密码。
 
 该命令的语法如下：
 
@@ -40,12 +40,12 @@ $ echo $SSHPASS
 $ sshpass -e ssh username@10.42.0.1
 ```
 
-此外，sshpass不仅可以用于执行ssh命令，也可用于执行scp或者rsync命令：
+另外，sshpass不仅可以用于执行ssh命令，用于执行scp或者rsync命令也是可以的：
 
 ```shell
-# rsync
+# 执行rsync命令
 $ sshpass -e rsync -r --delete-after --quiet public xxxx@18.163.206.60:~/throwable.cn
-# scp
+# 执行scp命令
 $ sshpass -e scp -r public xxxx@18.163.206.60:~/throwable.cn
 ```
 
