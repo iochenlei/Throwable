@@ -12,6 +12,8 @@ date: 2020-06-04 14:36:58
 
 第一个方法是通过配置文件指定：
 
+<!--more-->
+
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE configuration

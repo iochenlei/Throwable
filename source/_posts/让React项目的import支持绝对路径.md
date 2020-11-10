@@ -1,5 +1,5 @@
 ---
-title: React应用开发使用绝对路径引用
+title: 让React项目的import支持绝对路径
 date: 2020-04-23 16:38:41
 tags:
 - React
@@ -7,7 +7,7 @@ categories:
 - 前端
 ---
 
-默认情况下，由React脚手架创建的应用，使用相对路径来引入组件(假设该组件位于`src/components/SubmittingToolbar`目录)：
+默认情况下，由React脚手架创建的应用，使用相对路径来引入组件(假设该组件位于`src/components/SubmittingToolbar`目录)或依赖：
 
 ```text
 import SubmittingToolbar from '../../../../components/SubmittingToolbar';
