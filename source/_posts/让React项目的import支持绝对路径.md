@@ -21,7 +21,7 @@ import SubmittingToolbar from '../../../../components/SubmittingToolbar';
 import SubmittingToolbar from 'components/SubmittingToolbar';
 ```
 
-那么我们如何配置才能实现该目的？其实很简单，只需要在根目录创建一个`jsconfig.json`文件：
+为了实现该功能，只需要在根目录创建一个`jsconfig.json`文件：
 
 ```json
 {
@@ -32,7 +32,7 @@ import SubmittingToolbar from 'components/SubmittingToolbar';
 }
 ```
 
-如果你配置了eslint，为了避免eslint误报，还要进行额外的配置，在eslint的配置文件的`settings`中加入以下内容：
+如果项目中配置了eslint，为了避免eslint误报，还要进行额外的配置，在eslint的配置文件的`settings`小节中加入：
 
 ```json
 {
@@ -45,4 +45,3 @@ import SubmittingToolbar from 'components/SubmittingToolbar';
   }
 }
 ```
-
