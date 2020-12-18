@@ -59,7 +59,7 @@ abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMapping im
 abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMethodMapping {
 }
 
-abstract class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMapping {
+class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMapping {
 }
 
 @enduml
